@@ -19,7 +19,7 @@ Mantente al tanto de las últimas noticias y eventos en la Comuna Bambil Collao.
 
 ## Demo
 
-Puedes ver una demostración en vivo de nuestro proyecto en [Demo: Comuna Bambil Collao](https://tu-enlace-demo-aqui.com).
+Puedes ver una demostración en vivo de nuestro proyecto en [Demo: Comuna Bambil Collao](https://comuna-bambil-collao.netlify.app).
 
 ## Instrucciones para Ejecutar el Proyecto Localmente
 
