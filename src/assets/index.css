@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@200;400;600;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --body-color: #ffffff;
+    --banner-color: #b1baca;
+    --container-color: #849297;
+
+    --first-color: #3f38c8;
+    --title-color: #000000;
+    --txt-color: #000000;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 8rem;
+  }
+  @media (min-width: 1024px) {
+    html {
+      scroll-padding-top: 10rem;
+    }
+  }
+
+  body {
+    font-family: 'Mulish', sans-serif;
+    background: var(--body-color);
+    transition: 0.4s;
+    /*☝🏽 For dark/light mode animation */
+  }
+
+  input,
+  textarea {
+    padding-left: 0.8rem;
+    background: var(--body-color);
+  }
+  textarea {
+    padding-top: 0.8rem;
+    resize: vertical;
+  }
+
+  .notifications {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--title-color);
+    border: none;
+    background: var(--first-color);
+    border-radius: 0.3rem;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    width: auto;
+    margin: 2rem auto;
+    cursor: pointer;
+  }
+  .notifications.warn {
+    background: #ffa83f;
+  }
+  .notifications.error {
+    background: #df484a;
+  }
+  .notifications.success {
+    background: #4eca7a;
+  }
+}
+
+@layer components {
+  .firstColorLink {
+    @apply font-semibold hover:text-firstColor;
+  }
+  .buttonFirstColor {
+    @apply bg-firstColor hover:opacity-70 text-white font-semibold rounded-lg p-4;
+  }
+
+  .contractInput {
+    @apply text-base w-full h-full text-txtColor rounded-lg border-2 border-bannerColor outline-none focus:border-blue-500;
+  }
+  .labelDown {
+    @apply absolute top-3 left-3 w-fit text-base text-txtColor transition-all duration-300;
+  }
+  .labelUp + label,
+  /* Keep label up when it has content (not shown placeholder): */
+  .contractInput:not(:placeholder-shown).contractInput:not(:focus) + label {
+    @apply absolute -top-3 bg-bodyColor px-2 text-titleColor text-sm;
+  }
+}
