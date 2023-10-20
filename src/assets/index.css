@@ -6,10 +6,16 @@
 
 @layer base {
   :root {
+    /* mi paleta de colores */
+    --primary-color: #687864;
+    --second-color: #31708e;
+    --third-color: #5085a5;
+    --fourth-color: #8fc1e3;
+    --fifth-color: #f7f9fb;
+
     --body-color: #ffffff;
     --banner-color: #b1baca;
     --container-color: #849297;
-
     --first-color: #3f38c8;
     --title-color: #000000;
     --txt-color: #000000;
@@ -17,7 +23,7 @@
 
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 8rem;
+    scroll-padding-top: 4rem;
   }
   @media (min-width: 1024px) {
     html {

@@ -1,5 +1,13 @@
 <template>
-  <a :href="link">
+  <a :href="link" target="_blank" rel="noopener noreferrer" v-if="blank">
+    <li
+      class="cursor-pointer text-white block py-5 px-10 md:py-0 md:px-0 hover:opacity-70"
+      :class="active && 'text-white' || 'text-titleColor'"
+    >
+      {{ text }}
+    </li>
+  </a>
+  <a :href="link" v-else>
     <li
       class="cursor-pointer text-white block py-5 px-10 md:py-0 md:px-0 hover:opacity-70"
       :class="active && 'text-white' || 'text-titleColor'"
@@ -25,6 +33,12 @@ export default defineComponent({
     active: {
       type: Boolean,
       required: false
+    },
+    // tab blank
+    blank: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   }
 })
