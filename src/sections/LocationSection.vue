@@ -7,27 +7,16 @@ let isOpen = ref(1);
 <template>
     <!-- Questions Section Start -->
     <div id="location" class="mx-auto px-5 md:w-4/5">
-        <section class="py-16 pt-18">
-            <div class="w-4/5 md:w-3/5 mx-auto">
+        <section class="pt-18">
+            <div class="w-4/5 md:w-3/5 mx-auto pt-5">
                 <h2 class="text-3xl md:text-4xl font-theme-heading font-medium text-center">Ubicación</h2>
                 <p class="text-theme-grayish-blue text-center mt-7 font-theme-content text-lg">La comuna Bambil Collao está ubicada en Sta. Elena - Parroquia Colonche</p>
             </div>
 
-            <div class="mt-10 w-full lg:w-3/5 mx-auto">
-                <!-- <ul class="shadow-lg">
-                    <template v-for="(faq, index) in faqs" :key="faq.id">
-                        <li @click="isOpen = faq.id" :class="isOpen === faq.id ? 'text-theme-secondary' : ''" class="font-theme-content font-medium text-xl cursor-pointer hover:text-theme-secondary py-5 flex justify-between items-center transition duration-200 bg-slate-100 px-6">
-                            <a href="#">{{ faq.title }}</a>
-                            <svg :class="isOpen === faq.id ? 'rotate-180 text-theme-secondary' : 'rotate-0 text-theme-primary'" class="transform" xmlns="http://www.w3.org/2000/svg" width="18" height="12"><path fill="none" stroke="currentColor" stroke-width="3" d="M1 1l8 8 8-8" /></svg>
-                        </li>
-                        <p v-show="isOpen === faq.id" class="bg-slate-50 px-6 font-theme-content text-md lg:text-lg py-5 text-gray-500 text-justify">{{ faq.description }}</p>
-                    </template>
-                </ul>
-                <div class="flex justify-center mt-10">
-                    <LinkButton btn-type="primary" link="#" class="text-sm">More FAQs</LinkButton>
-                </div> -->
+            <div class=" w-full lg:w-3/5">
             </div>
             <div class="mapa">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.4845036976058!2d-80.65723262576253!3d-1.9598173980224185!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x902dd00ad3b3106d%3A0x18ff9cc5561eac86!2sBambil%20Collao!5e0!3m2!1ses-419!2sec!4v1698342874224!5m2!1ses-419!2sec" width="800" height="600" style="border:0;"  loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </section>
     </div>

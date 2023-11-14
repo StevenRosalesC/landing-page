@@ -1,5 +1,5 @@
 <template>
-  <a href="/" class="w-[8rem] hover:opacity-70">
+  <a href="/" class="w-[8rem] ">
     <p class="font-bold text-white ml-5">BAMBIL COLLAO</p>
   </a>
 </template>
