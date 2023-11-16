@@ -58,30 +58,31 @@
                     </div>
                   </div>
                   <!-- mensaje para la falificación -->
-                  <div v-if="calificando" class="flex items-end">
+                  <div v-if="calificando && !isCalificated" class="flex items-end">
                     <div class="flex flex-col  text-xs max-w-xs mx-2 order-2 items-start">
                       <div>
-                        <div
-                          class="px-2 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600">
+                        <div class="px-2 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600">
                           <span class="font-bold">
                             Califica la atención del asistente virtual
 
                           </span>
-                          <div @click="calificar(1)" class="flex items-center cursor-pointer hover:text-green-900  text-green-500">
-                            <FaceHappyIcon  class="text-xl "/>
+                          <div @click="calificar(1)"
+                            class="flex items-center cursor-pointer hover:text-green-900  text-green-500">
+                            <FaceHappyIcon class="text-xl " />
                             <span class="font-bold  ">Buena</span>
                           </div>
-                          <div @click="calificar(2)" class="flex items-center cursor-pointer text-orange-300 hover:text-orange-900">
-                            <FaceNeutralIcon  class=" text-xl "/>
+                          <div @click="calificar(2)"
+                            class="flex items-center cursor-pointer text-orange-300 hover:text-orange-900">
+                            <FaceNeutralIcon class=" text-xl " />
                             <span class="font-bold ">Regular</span>
                           </div>
-                          <div @click="calificar(3)" class="flex items-center cursor-pointer text-red-400 hover:text-red-900">
-                            <FaceSadIcon  class="text-xl"/>
+                          <div @click="calificar(3)"
+                            class="flex items-center cursor-pointer text-red-400 hover:text-red-900">
+                            <FaceSadIcon class="text-xl" />
                             <span class="font-bold ">Mala</span>
                           </div>
                           <div @click="cancelCalificar">
-                            <span  class="cursor-pointer text-gray-400 hover:text-gray-900"
-                            >
+                            <span class="cursor-pointer text-gray-400 hover:text-gray-900">
                               En otro momento
                             </span>
                           </div>
@@ -102,7 +103,7 @@
                       id="message-input"
                       class="w-full text-xs focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-2 bg-gray-200 rounded-md py-3 ">
                     <div class="absolute right-0 items-center inset-y-0  sm:flex">
-                      <button type="button" @click="sendMessage(newMessage.text)" :disabled="isLoading||calificando"
+                      <button type="button" @click="sendMessage(newMessage.text)" :disabled="isLoading || calificando"
                         class="inline-flex items-center justify-center rounded-lg px-2 py-3 transition duration-500 ease-in-out text-white bg-blue-500 hover:bg-blue-400 focus:outline-none">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                           class="h-4 w-4 ml-2 transform rotate-90">
@@ -121,10 +122,7 @@
         </div>
       </div>
     </div>
-
     <LocationSection />
-
-
   </main>
 </template>
 
@@ -151,6 +149,7 @@ interface Message {
 }
 
 const calificando = ref(false);
+const isCalificated = ref(false);
 
 const newMessage = ref<Message>({
   text: '',
@@ -170,17 +169,50 @@ const messages = ref<Message[]>([
   },
 ]);
 
+
+const getDate = () => {
+  // Obtener la fecha y hora actual en UTC
+  const fechaActualUTC = new Date();
+
+  // Crear un objeto de formato de fecha con la zona horaria de Guayaquil
+  const formatoFecha = new Intl.DateTimeFormat('es-EC', {
+    timeZone: 'America/Guayaquil',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+
+  // Formatear la fecha actual en la zona horaria de Guayaquil
+  const fechaGuayaquil = formatoFecha.format(fechaActualUTC);
+
+  const partsDate = fechaGuayaquil.split('/');
+
+  const date = new Date(
+    parseInt(partsDate[2]),
+    parseInt(partsDate[1]) - 1,
+    parseInt(partsDate[0])
+  )
+
+  return date.toISOString().split('T')[0];
+
+};
+
 const findMessagesSessionStorage = () => {
   // console.log('findMessagesSessionStorage');
   const messagesSessionStorage = sessionStorage.getItem('messages');
   const calificandoSessionStorage = sessionStorage.getItem('calificando');
-  console.log(calificandoSessionStorage);
+  const isCalificatedSessionStorage = sessionStorage.getItem('isCalificated');
+
+
   if (calificandoSessionStorage) {
-    calificando.value = calificandoSessionStorage === 'true'? true : false;
+    calificando.value = calificandoSessionStorage === 'true' ? true : false;
   }
   if (messagesSessionStorage) {
     messages.value = JSON.parse(messagesSessionStorage);
     // console.log(messages.value);
+  }
+  if (isCalificatedSessionStorage) {
+    isCalificated.value = isCalificatedSessionStorage === 'true' ? true : false;
   }
 };
 
@@ -209,8 +241,11 @@ const sendMessage = async (text: string) => {
     };
     messages.value.push(messageBot);
     // almacenar los mensajes en session storage
-    sessionStorage.setItem('messages', JSON.stringify(messages.value));
     // scroll to bottom of messages container
+    sessionStorage.setItem('messages', JSON.stringify(messages.value));
+    if (!isCalificated.value) {
+      waitForMessage()
+    }
 
     newMessage.value = {
       text: '',
@@ -220,7 +255,6 @@ const sendMessage = async (text: string) => {
     if (messagesContainer) {
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
-    waitForMessage()
     isLoading.value = false;
 
   }).catch((error) => {
@@ -244,17 +278,16 @@ const openChat = () => {
   isVisible.value = true;
   // console.log(isVisible.value);
   const messagesContainerChat = document.getElementById('messages-container');
-  console.log(messagesContainerChat);
   // scroll to bottom of messages container
   if (messagesContainerChat) {
     console.log('scroll');
     messagesContainerChat.scrollTop = messagesContainerChat.scrollHeight;
   }
-  if (messages.value.length > 1 && !calificando.value) {
+  if (messages.value.length > 1 && !calificando.value && !isCalificated.value) {
     console.log('esperar');
     waitForMessage()
   }
-  
+
 };
 
 const waitForMessage = () => {
@@ -271,21 +304,29 @@ const waitForMessage = () => {
   }, 10000)
 };
 
-const cancelCalificar =()=>{
+const cancelCalificar = () => {
   calificando.value = false;
   sessionStorage.setItem('calificando', JSON.stringify(calificando.value));
 }
 
-const calificar= async(cal:number)=>{
-  console.log(cal);
+const calificar = async (cal: number) => {
   switch (cal) {
     case 1:
-      await apiComuna.post("chatbot/calificar", {
-        calificacion: 1
+      await apiComuna.post("feedback/create", {
+        calification: 3,
+        date: getDate()
       }).then((response) => {
-        console.log(response);
+        // console.log(response);
         calificando.value = false;
         sessionStorage.setItem('calificando', JSON.stringify(calificando.value));
+        sessionStorage.setItem('isCalificated', JSON.stringify(true));
+        isCalificated.value = true;
+        messages.value.push({
+          text: 'Muchas gracias por tu calificación, esperamos que hayas tenido una buena experiencia',
+          from: 'bot',
+          date: new Date().toLocaleString()
+        });
+        sessionStorage.setItem('messages', JSON.stringify(messages.value));
       }).catch((error) => {
         console.log(error);
       }).finally(() => {
@@ -296,12 +337,21 @@ const calificar= async(cal:number)=>{
       })
       break;
     case 2:
-      await apiComuna.post("chatbot/calificar", {
-        calificacion: 2
+      await apiComuna.post("feedback/create", {
+        calification: 2,
+        date: getDate()
       }).then((response) => {
         console.log(response);
         calificando.value = false;
         sessionStorage.setItem('calificando', JSON.stringify(calificando.value));
+        sessionStorage.setItem('isCalificated', JSON.stringify(true));
+        isCalificated.value = true;
+        messages.value.push({
+          text: 'Gracias por tu calificación, trabajaremos para mejorar',
+          from: 'bot',
+          date: new Date().toLocaleString()
+        });
+        sessionStorage.setItem('messages', JSON.stringify(messages.value));
       }).catch((error) => {
         console.log(error);
       }).finally(() => {
@@ -312,12 +362,21 @@ const calificar= async(cal:number)=>{
       })
       break;
     case 3:
-      await apiComuna.post("chatbot/calificar", {
-        calificacion: 3
+      await apiComuna.post("feedback/create", {
+        calification: 1,
+        date: getDate()
       }).then((response) => {
         console.log(response);
         calificando.value = false;
         sessionStorage.setItem('calificando', JSON.stringify(calificando.value));
+        sessionStorage.setItem('isCalificated', JSON.stringify(true));
+        isCalificated.value = true;
+        messages.value.push({
+          text: 'Gracias por tu calificación, estamos trabajando constantemente para mejorar',
+          from: 'bot',
+          date: new Date().toLocaleString()
+        });
+        sessionStorage.setItem('messages', JSON.stringify(messages.value));
       }).catch((error) => {
         console.log(error);
       }).finally(() => {
@@ -334,10 +393,7 @@ const calificar= async(cal:number)=>{
 
 }
 
-
 findMessagesSessionStorage();
-
-
 
 </script>
 <style scoped>
