@@ -6,11 +6,11 @@ let isOpen = ref(1);
 
 <template>
     <!-- Questions Section Start -->
-    <div id="location" class="mx-auto px-5 md:w-4/5">
-        <section class="pt-18">
-            <div class="w-4/5 md:w-3/5 mx-auto pt-5">
-                <h2 class="text-3xl md:text-4xl font-theme-heading font-medium text-center">Ubicación</h2>
-                <p class="text-theme-grayish-blue text-center mt-7 font-theme-content text-lg">La comuna Bambil Collao está ubicada en Sta. Elena - Parroquia Colonche</p>
+    <div id="location" class="mx-auto md:w-3/4 py-3">
+        <section class="">
+            <div class="">
+                <h2 class="text-center font-semibold font-serif text-xl md:text-2xl">Ubicación</h2>
+                <p class="text-center font-sans text-sm md:text-xl">La comuna Bambil Collao está ubicada en Sta. Elena - Parroquia Colonche</p>
             </div>
 
             <div class=" w-full lg:w-3/5">
@@ -20,12 +20,10 @@ let isOpen = ref(1);
             </div>
         </section>
     </div>
-    <!-- Questions Section End -->
 </template>
 <style scoped>
 /* hacer el mapa responsive */
 .mapa {
-    position: relative;
     padding-bottom: 56.25%;
     height: 0;
     overflow: hidden;

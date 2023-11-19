@@ -1,31 +1,35 @@
 <template>
-  <footer
-    class="p-8 bg-primaryColor md:flex md:items-center md:justify-between lg:max-w-6xl lg:mx-auto lg:rounded-t-lg"
-  >
-    <p class="text-sm text-txtColor text-center lg:pl-2">
-      © 2023 by Steven Rosales 
+  <footer class="mx-5 flex bg-green-900 h-16 items-center xs:mx-14 lg:!mx-auto lg:max-w-5xl">
+    <div class="flex-1">
+      
+      <p class="text-xs md:text-sm text-white">
+        © 2023         
+        <a href="https://github.com/StevenRosalesC" class="font-bold">Steven Rosales</a>.
+      </p>
 
-      <a href="https://github.com/StevenRosalesC" class="firstColorLink">Steven Rosales</a>.
-    </p>
-
-    <ul
-      class="flex flex-wrap mx-2  justify-center text-sm text-txtColor mt-6 md:mt-0 lg:pr-2"
-    >
-      <li>
-        <a href="#comuna" class="mr-6 md:mr-8 firstColorLink">Comuna</a>
-      </li>
-      <li>
-        <a href="#noticias" class="mr-6 md:mr-8 firstColorLink">Noticias</a>
-      </li>
-      <li>
-        <a href="#location" class="firstColorLink">Localización</a>
-      </li>
-    </ul>
+    </div>
+    <div class="flex-1 flex">
+      <div class="flex-1" v-for="(link,index) in links" :key="index">
+        <a :href="link.url" class="text-xs md:text-sm font-semibold text-white">{{ link.name }}</a>
+      </div>
+    </div>
   </footer>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({})
+<script setup lang="ts">
+import { ref } from 'vue';
+const links = ref([
+  {
+    name: 'Comuna',
+    url: '#comuna'
+  },
+  {
+    name: 'Noticias',
+    url: '#noticias'
+  },
+  {
+    name: 'Localización',
+    url: '#location'
+  }
+])
 </script>

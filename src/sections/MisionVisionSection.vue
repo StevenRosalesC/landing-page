@@ -30,41 +30,36 @@ export default defineComponent({
 <template>
     <!-- Features Section Start -->
     <div id="comuna" class="mx-auto px-5 shadow-xl">
-        <section class="py-8">
-            <div class="w-4/5 md:w-3/5 mx-auto">
-                <h2 class="text-3xl md:text-4xl font-semibold  text-center">Comuna</h2>
-                <p class="text-theme-grayish-blue text-center mt-7 font-theme-content text-lg"> La comuna Bambil Collao se
-                    caracteriza por su gente trabajadora y emprendedora, que se dedica a la agricultura, ganadería, comercio
-                    y artesanía. </p>
+        <section class="py-4 md:py-5">
+            <div class="md:w-4/5  mx-auto">
+                <p class="text-center font-serif text-xl md:text-3xl">Comuna</p>
+                <p class="text-center text-sm md:text-base md:text-left">
+                    La comuna Bambil Collao se caracteriza por su gente trabajadora y emprendedora, 
+                    que se dedica a la agricultura, ganadería, comercio y artesanía. 
+                </p>
+            </div>
+            <div class="flex py-2">
+                <div v-for="(info,index) in information" :key="index" class="flex-1 ">
+                    <p class="text-center cursor-pointer text-base md:text-xl font-semibold hover:font-bold hover:text-theme-secondary" :class="isOpen === index ? 'border-b-4 border-green-200' : ''"
+                    @click="isOpen= index">
+                        {{ info.category === 'mision' ? 'Misión' : 'Visión'  }}
+                    </p>
+
+                </div>
             </div>
 
-            <div class="mt-5">
-                <ul class="flex flex-col items-center md:flex-row justify-center font-theme-heading">
-                    <li v-for="(info, index) in information" :key="index"
-                        :class="isOpen === index ? 'md:border-b-4 md:border-theme-secondary' : ''"
-                        class="w-full md:w-56 cursor-pointer hover:text-theme-secondary transition duration-200 border-b-2 border-t-2 md:border-t-0 flex justify-center">
-                        <a @click.prevent="isOpen = index" href="#"
-                            :class="isOpen === index ? ' border-fourthColor font-bold' : ''"
-                            class="py-5  md:border-b-0 border-b-4">{{ info.category === 'mision' ? 'Misión' : 'Visión' }}</a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="mt-16 mb-2">
+            <div class="py-2 md:py-4">
                 <!-- Tab Content -->
                 <template v-for="(info, index) in information" :key="index">
-                    <div v-show="isOpen === index" class="grid gap-6 md:grid-cols-2 lg:grid-cols-2 items-center">
-                        <div class="relative">
-                            <img class="z-10 w-full h-52 rounded" :src="info.id_image_image.imagen" />
-                            <div
-                                class="-z-10 bg-theme-primary h-52 w-96 sm:h-80 sm:w-full rounded-r-full absolute -left-56 -bottom-16">
-                            </div>
+                    <div v-show="isOpen === index" class="flex flex-col-reverse gap-4 md:flex-row ">
+                        <div class="flex-1">
+                            <img class="w-full h-52 rounded object-cover" :src="info.id_image_image.imagen" />
                         </div>
-                        <div>
-                            <h3 class="font-theme-heading text-2xl md:text-3xl font-medium text-center lg:text-left">{{
-                                info.category === 'mision' ? 'Misión' : 'Visión' }}</h3>
+                        <div class="flex-1">
+                            <p class="text-xl md:text-2xl font-semibold font-serif text-center lg:text-left">{{
+                                info.category === 'mision' ? 'Misión' : 'Visión' }}</p>
                             <p
-                                class="mt-3 font-theme-content text-lg text-theme-grayish-blue text-left md:text-sm lg:text-left">
+                                class="mt-3 font-theme-content text-xs  text-theme-grayish-blue text-left md:text-base lg:text-left">
                                 {{
                                     info.information }}</p>
                         </div>

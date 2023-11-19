@@ -3,8 +3,10 @@
     <MainSection />
     <MisionVisionSection />
     <NoticesSection />
-    <FAB @click="openChat" />
+    <FAB :show-ping="showPing" @click="openChat" />
     <div>
+      <Transition name="slide-fade">
+
       <div v-if="isVisible" class="fixed inset-0 flex items-center justify-center z-50">
         <div class="fixed inset-0 " @click="closeAssistant"></div>
         <div class="fixed bottom-4 right-4">
@@ -35,6 +37,7 @@
                 </div>
                 <div
                   class="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
+                  ref="scrollMessagesRef"
                   id="messages-container">
                   <div v-for="(message, index) in messages" :key="index"
                     :class="message.from === 'bot' ? 'flex items-end' : 'flex items-end justify-end'">
@@ -98,7 +101,7 @@
                 </div>
                 <div class="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0">
                   <div class="relative flex">
-                    <input :disabled="isLoading || calificando" type="text" placeholder="Escribe un mensaje..."
+                    <input :disabled="isLoading || calificando " type="text" placeholder="Escribe un mensaje..."
                       v-model="newMessage.text" v-on:keyup.enter="sendMessage(newMessage.text)" @input="waitForMessage"
                       id="message-input"
                       class="w-full text-xs focus:outline-none focus:placeholder-gray-400 text-gray-600 placeholder-gray-600 pl-2 bg-gray-200 rounded-md py-3 ">
@@ -121,6 +124,7 @@
           </div>
         </div>
       </div>
+    </Transition>
     </div>
     <LocationSection />
   </main>
@@ -134,14 +138,17 @@ import MainSection from '../../sections/MainSection.vue';
 import BotIcon from '../icons/BotIcon.vue';
 import UserIcon from '../icons/UserIcon.vue';
 import FAB from '../FAB.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import FaceHappyIcon from '../icons/FaceHappyIcon.vue';
 import FaceNeutralIcon from '../icons/FaceNeutralIcon.vue'
 import FaceSadIcon from '../icons/FaceSadIcon.vue'
 import apiComuna from '../../api/apiComuna';
+import { Transition } from 'vue';
+const scrollMessagesRef = ref(null);
 const isVisible = ref(false);
 const isLoading = ref(false);
 const timer = ref(1000)
+const showPing = ref(false);
 interface Message {
   text: string;
   from: string;
@@ -156,6 +163,12 @@ const newMessage = ref<Message>({
   from: '',
   date: ''
 });
+const scrollToBottom = () => {
+  if(scrollMessagesRef.value){
+    const scrollContainer = scrollMessagesRef.value as any;
+    scrollContainer.scrollTop = scrollContainer.scrollHeight;
+  }
+};
 
 const closeAssistant = () => {
   isVisible.value = false;
@@ -206,6 +219,9 @@ const findMessagesSessionStorage = () => {
 
   if (calificandoSessionStorage) {
     calificando.value = calificandoSessionStorage === 'true' ? true : false;
+    if (calificando.value) {
+      showPing.value = true;
+    }
   }
   if (messagesSessionStorage) {
     messages.value = JSON.parse(messagesSessionStorage);
@@ -226,11 +242,12 @@ const sendMessage = async (text: string) => {
   newMessage.value.from = 'user';
   newMessage.value.date = new Date().toLocaleString();
   messages.value.push(newMessage.value);
-  const messagesContainer = document.getElementById('messages-container');
-  // scroll to bottom of messages container
-  if (messagesContainer) {
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-  }
+  // const messagesContainer = document.getElementById('messages-container');
+  // // scroll to bottom of messages container
+  // if (messagesContainer) {
+  //   messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  // }
+  scrollToBottom();
   await apiComuna.post("chatbot/message-app", {
     message: newMessage.value.text
   }).then((response) => {
@@ -252,9 +269,7 @@ const sendMessage = async (text: string) => {
       from: '',
       date: ''
     };
-    if (messagesContainer) {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
+    scrollToBottom();
     isLoading.value = false;
 
   }).catch((error) => {
@@ -262,9 +277,7 @@ const sendMessage = async (text: string) => {
     isLoading.value = false;
 
   }).finally(() => {
-    if (messagesContainer) {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
+    scrollToBottom();
     isLoading.value = false;
     const messageInput = document.getElementById('message-input');
     if (messageInput) {
@@ -276,15 +289,9 @@ const sendMessage = async (text: string) => {
 
 const openChat = () => {
   isVisible.value = true;
-  // console.log(isVisible.value);
-  const messagesContainerChat = document.getElementById('messages-container');
-  // scroll to bottom of messages container
-  if (messagesContainerChat) {
-    console.log('scroll');
-    messagesContainerChat.scrollTop = messagesContainerChat.scrollHeight;
-  }
+  scrollToBottom();
   if (messages.value.length > 1 && !calificando.value && !isCalificated.value) {
-    console.log('esperar');
+    console.log('esperar a calificar');
     waitForMessage()
   }
 
@@ -294,13 +301,11 @@ const waitForMessage = () => {
   clearTimeout(timer.value)
   if (messages.value.length === 1) return
   timer.value = setTimeout(() => {
+    if(isCalificated.value) return;
     calificando.value = true;
+    showPing.value = true;
     sessionStorage.setItem('calificando', JSON.stringify(calificando.value));
-    const messagesContainer = document.getElementById('messages-container');
-    sessionStorage.setItem('messages', JSON.stringify(messages.value));
-    if (messagesContainer) {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
+    scrollToBottom();
   }, 10000)
 };
 
@@ -318,6 +323,7 @@ const calificar = async (cal: number) => {
       }).then((response) => {
         // console.log(response);
         calificando.value = false;
+        showPing.value= false;
         sessionStorage.setItem('calificando', JSON.stringify(calificando.value));
         sessionStorage.setItem('isCalificated', JSON.stringify(true));
         isCalificated.value = true;
@@ -343,6 +349,7 @@ const calificar = async (cal: number) => {
       }).then((response) => {
         console.log(response);
         calificando.value = false;
+        showPing.value= false;
         sessionStorage.setItem('calificando', JSON.stringify(calificando.value));
         sessionStorage.setItem('isCalificated', JSON.stringify(true));
         isCalificated.value = true;
@@ -368,6 +375,7 @@ const calificar = async (cal: number) => {
       }).then((response) => {
         console.log(response);
         calificando.value = false;
+        showPing.value= false;
         sessionStorage.setItem('calificando', JSON.stringify(calificando.value));
         sessionStorage.setItem('isCalificated', JSON.stringify(true));
         isCalificated.value = true;
@@ -393,12 +401,33 @@ const calificar = async (cal: number) => {
 
 }
 
+watch(() => scrollMessagesRef.value, () => {
+  scrollToBottom();
+});
+
 findMessagesSessionStorage();
 
 </script>
-<style scoped>
+<style lang="css" scoped>
 /* hacer el scrollbar de el container-messages mas delgado */
 #messages-container::-webkit-scrollbar {
   width: 5px;
+}
+/*
+  Enter and leave animations can use different
+  durations and timing functions.
+*/
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>

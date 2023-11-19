@@ -25,16 +25,16 @@ getInformation();
 <template>
     <!-- Hero Section Start -->
     <div class=" shadow-xl mx-auto px-5 overflow-x-hidden lg:overflow-x-visible bg-green-50">
-        <section class="grid mr-6 grid-cols-none md:grid-cols-2 md:pb-12 pt-0 md:pt-4 md:px-2">
-            <div class="lg:w-5/6 order-2 lg:order-none">
-                <p class="text-2xl xl:text-3xl font-bold  font-theme-heading text-center ">Comuna Bambil Collao</p>
-                <p class=" lg:text-sm mt-2 font-theme-content text-theme-grayish-blue text-left ml-2 lg:text-left mb-6">{{ info?.information }}</p>
+        <section class="flex flex-col gap-1 md:flex-row flex-wrap py-2">
+            <div class="flex-1">
+                <p class="text-2xl xl:text-3xl font-serif font-bold py-1  font-theme-heading text-center ">Comuna Bambil Collao</p>
+                <p class="text-center text-xs md:text-left md:text-sm ">{{ info?.information }}</p>
                 
             </div>
-            <div class="relative order-1 mt-20 lg:order-none mb-20 lg:mt-0 lg:mb-0 lg:-mr-10 ">
-                <img v-if="info?.id_image" class=" rounded shadow-md" :src="info.id_image_image.imagen" alt=''/>
-                <img v-else class="z-10 w-full rounded" src="../assets/comuna.jpg" alt=''/>
-                <div class="h-52 w-full  sm:h-80 sm:w-full rounded-l-full absolute -right-28 md:-right-48 -bottom-8"></div>
+            <div class="flex-1">
+                <img v-if="info?.id_image" class=" rounded shadow-md mx-auto " :src="info.id_image_image.imagen" alt=''/>
+                <img v-else class="z-10 w-full rounded " src="../assets/comuna.jpg" alt=''/>
+
             </div>
         </section>
     </div>

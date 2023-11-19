@@ -16,7 +16,8 @@
         />
       </button>
 
-      <div :class="menuOpen ? 'flex' : 'hidden'" class="mr-4 md:flex">
+      <div :class="menuOpen ? 'flex' : 'hidden'" 
+      class="mr-4 md:flex">
         <ul
           class="flex flex-col transition ease-in-out  absolute md:!relative right-0 2xs:right-5 top-24 py-5 rounded-lg bg-white 
           md:bg-green-700 md:border-none md:shadow-none border shadow 
@@ -35,22 +36,10 @@
   </header>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
+<script setup lang="ts">
+import { ref } from 'vue'
 import Logo from '../atoms/Logo.vue'
 import NavLink from '../atoms/NavLink.vue'
 import { Icon } from '@iconify/vue'
-
-export default defineComponent({
-  components: {
-    Logo,
-    NavLink,
-    Icon
-  },
-  data() {
-    return {
-      menuOpen: false
-    }
-  }
-})
+const menuOpen = ref(false)
 </script>
